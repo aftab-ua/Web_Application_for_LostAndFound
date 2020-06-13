@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %} Lost Post || {{ block.super }} {% endblock title %}
+
+
+{% block  content %}
+
+    <!-- Background --->
+    <div id="topHeader">
+        <div class="jumbotron jumbotron-fluid mb-3">
+            <div class="container">
+                <h2 class="text-center font-weight-bold">All Lost Post Here</h2>
+            </div>
+        </div>
+    </div>
+
+    <!--- Massage Framework --->
+    {% for message in messages %}
+        <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="text-center">
+                <span>{{ message }}</span>
+            </div>
+        </div>
+    {% endfor %}
+    <!---- End Message --->
+
+    <!--- Social Media --->
+    {% include 'base/social.html' %}
+
+    <!-- Search Form --->
+    <div id="searchForm">
+        <div class="container">
+            <div class="search mb-3">
+                <form action="" method="GET" class="search">
+                    <div class="input-group">
+                        <input class="form-control" name="q" type="text" placeholder="Enter Search Keyword"  value="{{ request.GET.q }}">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- main Content --->
+    <div id="mainSection">
+        <div class="container">
+            <div class="mainCart">
+                <div class="row">
+                    {% for lp in lost_person %}
+                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-4">
+                            <div class="card">
+                                {% if lp.image %}
+                                    <a href="{% url 'lost_person_details' lp.id %}" target="blank">
+                                        <img class="img-fluid card-img-top" style="width: 100%; height: 190px" src="{{ lp.image.url }}" alt="Uh oh image not Found !"/>
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'lost_person_details' lp.id %}" target="blank">
+                                        <img class="img-fluid card-img-top" style="width: 100%; height: 190px" src="{% static 'img/no-image-found.jpg' %}" alt="Uh oh image not Found !"/>
+                                    </a>
+                                {% endif %}
+                                <div class="card-body">
+                                    <p>Status : {{ lp.status }}</p>
+                                    <p>Location : {{ lp.location }}</p>
+                                    <p>Upload : {{ lp.update | naturaltime }}</p>
+                                    <a class="btn btn-info btn-rounded btn-block btn-sm" href="{% url 'lost_person_details' lp.id %}" target="blank">Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="mainSection">
+        <div class="container">
+            <div class="mainCart">
+                <div class="row">
+                    {% for lI in lost_item %}
+                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-4">
+                            <div class="card">
+                                {% if lI.image %}
+                                    <a href="{% url 'lost_item_details' lI.id %}" target="blank">
+                                        <img class="img-fluid card-img-top" style="width: 100%; height: 190px" src="{{ lI.image.url }}" alt="Uh oh image not Found !"/>
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'lost_item_details' lI.id %}" target="blank">
+                                        <img class="img-fluid card-img-top" style="width: 100%; height: 190px" src="{% static 'img/no-image-found.jpg' %}" alt="Uh oh image not Found !"/>
+                                    </a>
+                                {% endif %}
+                                <div class="card-body">
+                                    <p>Status : {{ lI.status }}</p>
+                                    <p>Location : {{ lI.location }}</p>
+                                    <p>Upload : {{ lI.update | naturaltime }}</p>
+                                    <a class="btn btn-info btn-rounded btn-block btn-sm" href="{% url 'lost_item_details' lI.id %}" target="blank">Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-4">
+                            <h4>No search results for this query</h4>
+                            <div style="margin-bottom: 190px"></div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

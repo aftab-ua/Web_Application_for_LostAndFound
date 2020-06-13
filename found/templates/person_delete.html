@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %} Person Delete || {{ block.super }} {% endblock %}
+{% block stylesheet %} {% endblock %}
+
+{% block content %}
+
+    <div style="margin-bottom: 120px"></div>
+    <!-- Message Framework -->
+    <div class="container-fluid">
+        {% if messages %}
+             <div class="messages">
+                {% for message in messages %}
+                <div {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="close"><span aria-hidden="true">X</span></button>
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+    <!-- End Message Framework -->
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <h2 style="text-align: center">Are you sure you want to delete {{ fp_delete }}" ? </h2>
+                            <div class="text-center">
+                                <input type="submit" class="btn btn-danger" value="Yes" /> || <a href="{% url 'home' %}" class="btn btn-primary">No</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="offset-md-3 col-md-6 my-5">
+
+
+        <div style="margin-bottom: 180px"></div>
+
+    </div>
+
+{% endblock %}
+
+
+{% block script %} {% endblock %}
+

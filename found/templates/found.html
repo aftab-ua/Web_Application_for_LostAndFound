@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %} Found Post || {{ block.super }} {% endblock title %}
+
+{% block  content %}
+
+    <!-- Background --->
+    <div id="topHeader">
+        <div class="jumbotron jumbotron-fluid mb-3">
+            <div class="container">
+                <h2 class="text-center font-weight-bold">All Found Post Here</h2>
+            </div>
+        </div>
+    </div>
+
+    <!--- Massage Framework --->
+    {% for message in messages %}
+        <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="text-center">
+                <span>{{ message }}</span>
+            </div>
+        </div>
+    {% endfor %}
+    <!---- End Message --->
+
+    <!--- Social Media --->
+    {% include 'base/social.html' %}
+
+    <!-- Search Form --->
+    <div id="searchForm">
+        <div class="container">
+            <div class="search mb-3">
+                <form action="" method="GET" class="search">
+                    <div class="input-group">
+                        <input class="form-control" name="q" type="text" placeholder="Enter Search Keyword"  value="{{ request.GET.q }}">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Found Person Content -->
+    <div id="foundPersonSection">
+        <div class="container">
+            <div class="mainCart">
+                <div class="row">
+                    {% for fP in found_person %}
+                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-4">
+                            <div class="card">
+                            {% if fP.image %}
+                                    <a href="{% url 'found_person_details' fP.id %}">
+                                        <img class="card-img-top img-fluid" src="{{ fP.image.url }}" alt="Oops image not found" style="width: 100%; height: 200px">
+                                    </a>
+                                {% else %}
+                                    <a href="">
+                                        <img class="card-img-top img-fluid" src="{% static 'img/no-image-found.jpg' %}" alt="Oops image not found" style="width: 100%; height: 200px">
+                                    </a>
+                                {% endif %}
+                                <div class="card-body">
+                                    <p class="text-justify">Status : {{ fP.status }}</p>
+                                    <p class="text-justify">Location : {{ fP.location }}</p>
+                                    <p class="text-justify">Upload : {{ fP.update | naturaltime }}</p>
+                                    <a class="btn btn-info btn-rounded btn-block btn-sm" href="" target="blank">Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--- Found Item Content --->
+    <div id="foundPersonSection">
+        <div class="container">
+            <div class="mainCart">
+                <div class="row">
+                    {% for ft in found_item %}
+                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-4">
+                            <div class="card">
+                                {% if ft.image %}
+                                    <a href="{% url 'found_item_details' ft.id %}">
+                                        <img class="card-img-top img-fluid" src="{{ ft.image.url }}" alt="Oops image not found" style="width: 100%; height: 200px">
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'found_item_details' ft.id %}">
+                                        <img class="card-img-top img-fluid" src="{% static 'img/no-image-found.jpg' %}" alt="Oops image not found" style="width: 100%; height: 200px">
+                                    </a>
+                                {% endif %}
+                                <div class="card-body">
+                                    <p class="text-justify">Status: {{ ft.status }}</p>
+                                    <p class="text-justify">Location: {{ ft.location }}</p>
+                                    <p class="text-justify">Upload: {{ ft.update | naturaltime }}</p>
+                                    <a class="btn btn-info btn-rounded btn-block btn-sm" href="{% url 'found_item_details' ft.id %}" target="blank">Details</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-4">
+                            <div style="margin-bottom: 260px"></div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+

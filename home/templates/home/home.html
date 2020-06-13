@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% load embed_video_tags %}
+
+{% block title %} Home || {{ block.super }} {% endblock title %}
+
+{% block content %}
+
+    <!-- Background --->
+    <div id="topHeader">
+        <div class="jumbotron jumbotron-fluid mb-3">
+            <div class="container">
+                <h2 class="text-center font-weight-bold">Lost and Found</h2>
+            </div>
+        </div>
+    </div>
+
+    <!--- Massage Framework --->
+    {% for message in messages %}
+        <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="text-center">
+                <span>{{ message }}</span>
+            </div>
+        </div>
+    {% endfor %}
+    <!---- End Message --->
+
+    <!--- Social Media --->
+    {% include 'base/social.html' %}
+
+
+    <!---- Home Section ----->
+    <section id="homeSection">
+        <div class="container">
+            <div class="row">
+                <!-------- Left Section ------->
+                {% for i in last_post %}
+                    <div class="col-md-7">
+                        <div class="mainContent">
+                            <div class="text-center">
+                                {% if i.image %}
+                                    <a href="">
+                                        <img src="{{ i.image.url }}" style="width: 660px; height: 420px" class="img-thumbnail img-fluid" alt="Oops image not found">
+                                    </a>
+                                {% endif %}
+                            </div>
+                            <p class="font-weight-bold my-3 text-capitalize">Upload :  {{ i.update }} | Create by {{ i.user }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+                <!--------- Right Section -------->
+                <div class="col-md-5">
+                    <!--- People say ---->
+                    <div class="col mb-3">
+                        <div class="card">
+                            <div class="card-header p-2">
+                               <h4 class="font-weight-bold text-center">Reward</h4>
+                            </div>
+                            {% for reward in my_reward %}
+                                <div class="card-body" style="height: 65px">
+                                    <marquee scrolldelay="125" onmouseover="stop()" onmouseout="start()">
+                                        <h5>{{ reward.text }}</h5>
+                                    </marquee>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!--- Share video  -->
+                    <div class="col mb-4">
+                        <div class="card-header p-2">
+                            <h4 class="font-weight-bold text-center">Please share this videos</h4>
+                        </div>
+                        {% for v in videos %}
+                            <div class="card">
+                                <div class="cord-body">
+                                    <div class="embed-responsive embed-responsive-16by9">
+                                        {% video v.video as my %}
+                                            <iframe width="853" height="480" src="{{ my.url }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                        {% endvideo %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+         <h3 class="text-center font-weight-bold mt-4" style="font-family: 'Arial Black'">Person that's are found & lost .</h3>
+         <hr>
+    </div>
+
+    <!------ Person Post ----->
+    <section id="foundSection">
+        <div class="container">
+            <div class="row">
+                {% for fh in home_found %}
+                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-4">
+                        <div class="card">
+                            {% if fh.image %}
+                                <img class="card-img-top img-fluid" src="{{ fh.image.url }}" alt="Oops image not Found" style="width: 100%; height: 210px" >
+                            {% endif %}
+                            <div class="card-body">
+                                <p class="card-text font-weight-bold text-center text-justify">
+                                    <a href="{% url 'found_person_details' fh.id %}" style="text-decoration: none;">{{ fh.status }}</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+     <div class="container">
+         <h3 class="text-center font-weight-bold mt-4" style="font-family: 'Arial Black'">Items that's are found & lost .</h3>
+         <hr>
+    </div>
+
+    <!----- Item Section ---->
+    <section id="lostSection">
+        <div class="container">
+            <div class="row">
+                {% for hi in home_item %}
+                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-xl-4 mb-4">
+                        <div class="card">
+                            {% if hi.image %}
+                                <img class="card-img-top img-fluid" src="{{ hi.image.url }}" alt="Oops image not Found" style="width: 100%; height: 210px" >
+                            {% endif %}
+                            <div class="card-body">
+                                <p class="card-text font-weight-bold text-center text-justify">
+                                    <a href="{% url 'found_item_details' hi.id %}" style="text-decoration: none;">{{ hi.status }}</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+
+    <!--------------------
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 bg-secondary">1</div>
+            <div class="col-md-4 bg-success">1</div>
+            <div class="col-md-4 bg-primary">1</div>
+        </div>
+    </div>
+    -------------->
+
+{% endblock content %}
+

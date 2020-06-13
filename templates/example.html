@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %} Home || {{ block.super }} {% endblock title %}
+
+{% block content %}
+
+    <!-- Background --->
+    <div id="topHeader">
+        <div class="jumbotron jumbotron-fluid mb-3 p-0">
+            <div class="container">
+                <h2 class="text-center">Lost & Found</h2>
+            </div>
+        </div>
+    </div>
+    <!--- Massage Framework --->
+    {% for message in messages %}
+        <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="text-center">
+                <span>{{ message }}</span>
+            </div>
+        </div>
+    {% endfor %}
+    <!---- End Message --->
+
+    <!------- Social Media -------->
+    {% include 'base/social.html' %}
+
+    <section id="">
+        <div class="container">
+            <div class="row">
+
+            </div>
+        </div>
+    </section>
+
+{% endblock content %}
+
+
+def home(request):
+    return render(request, 'home/home.html')
+
+
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.home, name='home')
+]
+
+
+ # Contact Models ---------------------#
+    form = ContactForm(request.POST or None)
+    errors = None
+    if form.is_valid():
+        form.save()
+        messages.add_message(request, messages.SUCCESS, 'You message successfully send, please wait you will inform you')
+        return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+    if form.errors:
+        errors = form.errors
+        messages.add_message(request, messages.ERROR, 'Please give the correct information')
+    context = {
+        'form': form,
+        'errors': errors
+    }
+    # End of contact -----------------------------------

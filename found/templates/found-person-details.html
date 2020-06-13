@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% block title %} Person Details || {{ block.super }} {% endblock %}
+
+{% block stylesheet %}
+
+{% endblock %}
+
+
+{% block content %}
+
+    <!-- Background --->
+    <div id="topHeader">
+        <div class="jumbotron jumbotron-fluid mb-3 mt-0">
+            <div class="container p-0">
+                <h2 class="font-weight-bold text-center">Person Details</h2>
+            </div>
+        </div>
+    </div>
+
+    <!--- Massage Framework --->
+    {% for message in messages %}
+        <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="text-center">
+                <span>{{ message }}</span>
+            </div>
+        </div>
+    {% endfor %}
+    <!---- End Message --->
+
+
+    <!--- Social Media --->
+    {% include 'base/social.html' %}
+
+    <!---- Main Content -------->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-1"></div>
+
+            <div class="col-md-7">
+                <div class="main_post">
+                    {% if fp_detail.image %}
+                        <img class="img-fluid img-thumbnail" src="{{ fp_detail.image.url }}" alt="Oops image not found" style="width: 100%; height: 550px">
+                    {% endif %}
+                    <!-- Post Content -->
+                    <h4 class="mt-3">Status : {{ fp_detail.status }}</h4>
+                    <p class="text-capitalize">Person Name : {{ fp_detail.name }}</p>
+                    <p class="text-capitalize">Father Name : {{ fp_detail.father_name }}</p>
+                    <p class="text-capitalize">Mother Name : {{ fp_detail.mother_name }}</p>
+                    <p class="text-capitalize">Age : {{ fp_detail.age }}</p>
+                    <p class="text-capitalize">Body Color : {{ fp_detail.body_color }}</p>
+                    <p class="text-capitalize">Height : {{ fp_detail.height }}</p>
+                    <p class="text-capitalize">Location : {{ fp_detail.location }}</p>
+                    <p class="text-capitalize">Contact info : {{ fp_detail.phone_number }}</p>
+                    <p class="text-capitalize">Create by : {{ fp_detail.user }}</p>
+                    <!-- End Contact Information -->
+
+                     <!----------- Authenticated --------->
+                    {% if request.user.is_authenticated %}
+                        <p class="text-justify">Identification : {{ fp_detail.identification_mark }}</p>
+                    {% endif %}
+
+
+
+                    <!-- Update and Delete button -->
+                    {% if fp_detail.user == user %}
+                        <a class="btn btn-success" href="{% url 'found_person_update' id=fp_detail.id   %}">Update</a>
+                        <a class="btn btn-danger" href="{% url 'found_person_delete' id=fp_detail.id  %}">Delete</a>
+                    {% endif %}
+                    <!-- End Update and Delete button -->
+
+                    <!------ User -------------->
+                    {% if f_item.user == user %}
+                        <a class="btn btn-success" href="{% url 'found_item_update' id=f_item.id   %}">Update</a>
+                        <a class="btn btn-danger" href="{% url 'found_item_delete' id=f_item.id  %}">Delete</a>
+                    {% endif %}
+                </div>
+
+                <!-- First Comment Form -->
+                <div class="full_contact my-5">
+                    <h3 class="font-weight-bold">Please Contact Us</h3>
+                    {% if errors %}
+                        {{ errors }}
+                    {% endif %}
+                    <form id="contact-form" method="post"  role="form">
+                        {% csrf_token %}
+                        <div class="control">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input id="form_subject" type="text" name="subject" class="form-control" required="required" data-error="Subject is required." placeholder="Subject *">
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <!-- Full Name --->
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input id="form_fullname" type="text" name="name" class="form-control" required="required" data-error="Fullname is required." placeholder="Full name *">
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!---- Email --->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input id="form_email" type="email" name="email" class="form-control"  required="required" data-error="Valid email is required." placeholder="E-mail *">
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <!---- Phone ------>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input id="form_phone" type="tel" name="phone" class="form-control" placeholder="Phone *">
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Message -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <textarea id="form_message" name="message" class="form-control" placeholder="Write your message *" rows="8" required="required" data-error="Please, leave us a message"></textarea>
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <input type="submit" class="btn btn-primary btn-send" value="Send message">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!----- Row Html ----->
+            <div class="col-md-4">
+                <!-- Related Post --->
+                <div class="col mb-4">
+                    <div class="card">
+                        <div class="card-header p-2">
+                            <h4 class="text-center font-weight-bold">Related Post</h4>
+                        </div>
+                         {% for r in related_found_person %}
+                             <img src="{{ r.image.url }}" alt="" style="width: 100%; height: 200px">
+                             <div class="card-body p-2">
+                                <a href="{% url 'found_item_details' r.id %}">
+                                    <h4 class="fh5co-article-title animate-box">{{ r.name }}</h4>
+                                </a>
+                                 <p>{{ r.location }}</p>
+                             </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!--- Share video  -->
+                <div class="col mb-4">
+                    <div class="card">
+                        <div class="card-header p-2">
+                            <h4 class="text-center font-weight-bold">Please Share video</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="embed-responsive embed-responsive-16by9">
+                                <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/zpOULjyy-n8?rel=0" allowfullscreen></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!---- Archive ------>
+                <div class="col mb-4">
+                    <div class="card">
+                        <div class="card-header p-2">
+                            <h4>Archive</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="card">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"><a href="">January</a></li>
+                                    <li class="list-group-item"><a href="">February</a></li>
+                                    <li class="list-group-item"><a href="">March</a></li>
+                                    <li class="list-group-item"><a href="">April</a></li>
+                                    <li class="list-group-item"><a href="">May</a></li>
+                                    <li class="list-group-item"><a href="">June</a></li>
+                                    <li class="list-group-item"><a href="">July</a></li>
+                                    <li class="list-group-item"><a href="">August</a></li>
+                                    <li class="list-group-item"><a href="">September</a></li>
+                                    <li class="list-group-item"><a href="">October</a></li>
+                                    <li class="list-group-item"><a href="">November</a></li>
+                                    <li class="list-group-item"><a href="">December</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block script %} {% endblock %}
+
